@@ -1,62 +1,59 @@
 @echo off
-:: Устанавливаем кодировку UTF-8
-chcp 65001 >nul
-title Поиск по Telegram - Запуск
+title Telegram Semantic Search - Launcher
 color 0A
 
 echo ===================================================
-echo   Semantic Search App: Запуск системы
+echo   Telegram Semantic Search: Starting...
 echo ===================================================
 echo.
 
-:: 1. Проверка Python
-echo [1/4] Проверка окружения
+:: 1. Check Python
+echo [1/4] Checking environment...
 python --version >nul 2>&1
 if errorlevel 1 (
-    echo [ОШИБКА] Python не найден!
-    echo Пожалуйста, убедитесь, что Python установлен и добавлен в PATH.
+    echo [ERROR] Python not found!
+    echo Please install Python 3.10+ and check "Add Python to PATH".
     pause
     exit /b
 )
 
-:: 2. Переход в рабочую директорию
+:: 2. Change directory to script location
 cd /d "%~dp0"
 
-:: 3. Проверка и создание виртуального окружения
+:: 3. Virtual Environment setup
 if not exist "venv\" (
-    echo [2/4] Создание виртуального окружения
+    echo [2/4] Creating virtual environment...
     python -m venv venv
     if errorlevel 1 (
-        echo [ОШИБКА] Не удалось создать venv.
+        echo [ERROR] Failed to create venv.
         pause
         exit /b
     )
-
-    echo [3/4] Установка библиотек
-    echo Это может занять время, пожалуйста, подождите...
+    
+    echo [3/4] Installing dependencies...
+    echo This may take up to 10 minutes, please wait...
     call venv\Scripts\activate
     python -m pip install --upgrade pip
     pip install -r requirements.txt
 ) else (
-    echo [2/4] Виртуальное окружение найдено
-    echo [3/4] Активация
+    echo [2/4] Virtual environment found.
+    echo [3/4] Activating...
     call venv\Scripts\activate
 )
 
-:: 4. Запуск приложения
-echo [4/4] Запуск интерфейса
+:: 4. Run Application
+echo [4/4] Launching UI in browser...
 echo ---------------------------------------------------
-echo ПРИЛОЖЕНИЕ ЗАПУЩЕНО.
-echo НЕ ЗАКРЫВАЙТЕ ЭТО ОКНО ВО ВРЕМЯ РАБОТЫ.
+echo APP IS RUNNING. 
+echo DO NOT CLOSE THIS WINDOW.
 echo ---------------------------------------------------
 echo.
 
-:: Запускаем streamlit
+:: Run streamlit from source folder
 streamlit run source/app.py
 
-:: Если произошла ошибка при работе
 if errorlevel 1 (
     echo.
-    echo [ОШИБКА] Произошел сбой при работе приложения.
+    echo [ERROR] Application crashed.
     pause
 )
