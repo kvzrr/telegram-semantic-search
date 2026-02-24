@@ -1,0 +1,6 @@
+pandas
+openai-whisper
+sentence-transformers
+chromadb
+streamlit
+telethon
